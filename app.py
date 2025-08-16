@@ -33,22 +33,17 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# --------------------------
 # Load saved model & data
-# --------------------------
 model = pickle.load(open("final_accident_severity_model.pkl", "rb"))         # trained pipeline
 train_columns = pickle.load(open("train_columns.pkl", "rb"))  # feature names used
 df = pd.read_csv("cleaned_accident_data_SL.csv")            # dataset
 
-# --------------------------
 # Sidebar menu
-# --------------------------
 menu = ["Home", "Data Exploration", "Visualisations", "Prediction", "Model Performance", "About"]
 choice = st.sidebar.selectbox("📂 Menu", menu)
 
-# --------------------------
+
 # HOME PAGE
-# --------------------------
 if choice == "Home":
     st.markdown('<p class="big-font">🚦 Accident Severity Prediction App</p>', unsafe_allow_html=True)
     st.write("""
@@ -56,7 +51,7 @@ if choice == "Home":
     can help emergency services respond faster and save lives. With the power of **Artificial Intelligence (AI)** and **Machine Learning (ML)**. This project studies past accident data to detect patterns and predict the **severity of road accidents** 
     based on **time, weather, location, and road conditions**.  
 
-    🚑 **Why is this important?**  
+    **Why is this important?**  
     - Emergency services often arrive without knowing how serious the accident is.  
     - Delays in correct response can cost valuable lives.  
     - No smart, proactive system exists today to assess accident severity in real time.  
@@ -68,7 +63,7 @@ if choice == "Home":
 
     """)
 
-    st.markdown('<div class="highlight-box">✅ Explore dataset<br>📊 Visualise patterns<br>🤖 Predict accident severity<br>📈 View model performance</div>', unsafe_allow_html=True)
+    st.markdown('<div class="highlight-box">Explore dataset<br>Visualise patterns<br>Predict accident severity<br>View model performance</div>', unsafe_allow_html=True)
 
     # Dataset stats
     col1, col2, col3 = st.columns(3)
@@ -87,11 +82,10 @@ if choice == "Home":
     ]
     st.info(random.choice(road_facts))
 
-# --------------------------
+
 # DATA EXPLORATION
-# --------------------------
 elif choice == "Data Exploration":
-    st.header("🔍 Data Exploration")
+    st.header("Data Exploration")
     st.write("Preview and explore the accident dataset.")
 
     # Check missing values per column
@@ -113,9 +107,8 @@ elif choice == "Data Exploration":
     st.markdown("### Dataset Overview")
     st.dataframe(df.head(10), use_container_width=True)
 
-# --------------------------
+
 # VISUALISATIONS
-# --------------------------
 elif choice == "Visualisations":
     st.header("📊 Data Visualisations")
 
@@ -132,16 +125,12 @@ elif choice == "Visualisations":
     sns.heatmap(corr, annot=False, cmap="coolwarm", ax=ax2)
     st.pyplot(fig2)
 
-# --------------------------
+
 # PREDICTION
-# --------------------------
 elif choice == "Prediction":
     st.header("🚦 Predict Accident Severity")
     st.write("Enter accident conditions to predict severity level.")
 
-    # --------------------------
-    # Numerical inputs
-    # --------------------------
     lat = st.number_input("📍 Latitude", float(df["Start_Lat"].min()), float(df["Start_Lat"].max()), step=0.01)
     lng = st.number_input("📍 Longitude", float(df["Start_Lng"].min()), float(df["Start_Lng"].max()), step=0.01)
     distance = st.number_input("✏️ Distance (mi)", 0.01, 100.0, step=0.01)
@@ -149,18 +138,12 @@ elif choice == "Prediction":
     temp = st.slider("🌡️ Temperature (°F)", 0, 120, 70)
     humidity = st.slider("💧 Humidity (%)", 0, 100, 50)
 
-    # --------------------------
-    # Categorical inputs
-    # --------------------------
     wind_options = df["Wind_Direction"].unique().tolist()
     wind_dir = st.selectbox("💨 Wind Direction", wind_options)
 
     weather_options = df["Weather_Condition"].unique().tolist()
     weather = st.selectbox("🌤 Weather Condition", weather_options)
 
-    # --------------------------
-    # Create input dataframe
-    # --------------------------
     input_dict = {
         "Start_Lat": lat,
         "Start_Lng": lng,
@@ -174,17 +157,12 @@ elif choice == "Prediction":
 
     input_df = pd.DataFrame([input_dict])
 
-    # --------------------------
-    # Encode categorical features dynamically
-    # --------------------------
     input_encoded = pd.get_dummies(input_df)
 
-    # Reindex to match training columns
     input_encoded = input_encoded.reindex(columns=train_columns, fill_value=0)
 
-    # --------------------------
+   
     # Predict
-    # --------------------------
     if st.button("Predict Severity"):
         prediction = model.predict(input_encoded)[0]
 
@@ -199,9 +177,8 @@ elif choice == "Prediction":
         st.info(severity_mapping.get(prediction, "Unknown severity level"))
 
 
-# --------------------------
-# MODEL PERFORMANCE - Single Model (Neat Bar Chart)
-# --------------------------
+
+# MODEL PERFORMANCE 
 elif choice == "Model Performance":
     st.subheader("🏆 Model Performance")
     st.markdown("This section shows the accuracy of the trained Accident Severity model.")
@@ -218,14 +195,10 @@ elif choice == "Model Performance":
     y_pred = model.predict(X_encoded)
     accuracy = (y_pred == y).mean()
 
-    # --------------------------
-    # Display accuracy in text
-    # --------------------------
     st.markdown(f"**Final Model Accuracy:** {accuracy:.2%}")
 
-    # --------------------------
+    
     # Bar chart visualization
-    # --------------------------
     st.markdown("### 📊 Accuracy Visualization")
 
     import matplotlib.pyplot as plt
@@ -233,7 +206,7 @@ elif choice == "Model Performance":
     models = ["Final Model"]
     accuracies = [accuracy]
 
-    fig, ax = plt.subplots(figsize=(3, 5))  # small, proportional chart
+    fig, ax = plt.subplots(figsize=(3, 5)) 
     bars = ax.bar(models, accuracies, color="skyblue", width=0.4)
 
     # Set limits and labels
@@ -247,3 +220,29 @@ elif choice == "Model Performance":
         ax.text(bar.get_x() + bar.get_width()/2, height + 0.02, f"{acc:.2%}", ha='center', fontsize=10)
 
     st.pyplot(fig)
+
+# ABOUT
+elif choice == "About":
+    st.header("ℹ️ About This Project")
+    st.write("""
+    This **Accident Severity Prediction App** is part of the mini-project 
+    *AI-Driven Road Accident Detection and Severity Prediction with Geo-Temporal Intelligence*.
+
+    ### Key Highlights:
+    - **Data Source:** Accident dataset (Sri Lanka sample from US dataset).
+    - **Features:** Geo-temporal, weather, and road features.
+    - **Model Used:** Decision Tree Classifier (final model).
+    - **Deployment:** Streamlit app for interactive exploration and prediction.
+
+    ### Functionality:
+    - Explore and visualize accident data.
+    - Predict accident severity based on user inputs.
+    - View model performance (accuracy & bar chart visualization).
+
+    ---  
+    **Developed with Python, Scikit-learn, Pandas, Matplotlib, Seaborn, and Streamlit.**
+
+    ### Deployed App
+    You can interact with the live app here:  
+    [🚦 Accident Severity Prediction App](https://prashoharan-accident-severity-prediction-app-c56g9f.streamlit.app/)
+    """)
