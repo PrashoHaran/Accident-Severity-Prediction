@@ -110,7 +110,7 @@ elif choice == "Data Exploration":
 
 # VISUALISATIONS
 elif choice == "Visualisations":
-    st.header("📊 Data Visualisations")
+    st.header("Data Visualisations")
 
     # Severity distribution
     st.markdown("### Distribution of Accident Severity")
@@ -128,7 +128,7 @@ elif choice == "Visualisations":
 
 # PREDICTION
 elif choice == "Prediction":
-    st.header("🚦 Predict Accident Severity")
+    st.header("Predict Accident Severity")
     st.write("Enter accident conditions to predict severity level.")
 
     lat = st.number_input("📍 Latitude", float(df["Start_Lat"].min()), float(df["Start_Lat"].max()), step=0.01)
@@ -180,7 +180,7 @@ elif choice == "Prediction":
 
 # MODEL PERFORMANCE 
 elif choice == "Model Performance":
-    st.subheader("🏆 Model Performance")
+    st.subheader("Model Performance")
     st.markdown("This section shows the accuracy of the trained Accident Severity model.")
 
     # Prepare features and target
@@ -199,7 +199,7 @@ elif choice == "Model Performance":
 
     
     # Bar chart visualization
-    st.markdown("### 📊 Accuracy Visualization")
+    st.markdown("### Accuracy Visualization")
 
     import matplotlib.pyplot as plt
 
@@ -221,7 +221,7 @@ elif choice == "Model Performance":
 
     st.pyplot(fig)
 
-# ABOUT
+# ABOUT Section
 elif choice == "About":
     st.header("ℹ️ About This Project")
     st.write("""
